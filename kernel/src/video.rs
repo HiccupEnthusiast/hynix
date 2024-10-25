@@ -9,11 +9,17 @@ impl<'a> FramebufferHelper<'a> {
     pub fn pitch(&self) -> u64 {
         self.inner.pitch()
     }
-    pub unsafe fn put_pixel(&self, x: u64, y: u64) {
+    pub unsafe fn put_pixel(&self, x: u64, y: u64, color: Color) {
         *(self
             .inner
             .addr()
             .add((x * self.inner.bpp() as u64 / 8 + y * self.pitch()) as usize)
-            as *mut u32) = 0xFFFF0000;
+            as *mut u32) = 0x00 << 24 | color.raw();
+    }
+}
+pub struct Color(pub [u8; 3]);
+impl Color {
+    pub fn raw(&self) -> u32 {
+        (self.0[0] as u32) << 16 | (self.0[1] as u32) << 8 | (self.0[2] as u32) << 0
     }
 }
