@@ -2,13 +2,12 @@
 #![no_main]
 
 use core::arch::asm;
-use core::fmt::Write;
 
 use limine::{
     request::{FramebufferRequest, RequestsEndMarker, RequestsStartMarker},
     BaseRevision,
 };
-use serial::ComDebugger;
+use video::FramebufferHelper;
 
 #[used]
 #[link_section = ".requests"]
@@ -27,6 +26,7 @@ static _START_MARKER: RequestsStartMarker = RequestsStartMarker::new();
 static _END_MARKER: RequestsEndMarker = RequestsEndMarker::new();
 
 mod serial;
+mod video;
 
 /// # Safety
 ///
@@ -37,17 +37,15 @@ mod serial;
 #[no_mangle]
 unsafe extern "C" fn _start() -> ! {
     assert!(BASE_REVISION.is_supported());
-
-    if let Some(framebuffer_response) = FRAMEBUFFER_REQUEST.get_response() {
-        if let Some(framebuffer) = framebuffer_response.framebuffers().next() {
+    match FramebufferHelper::new(&FRAMEBUFFER_REQUEST) {
+        Some(framebuffer) => {
             com_println!("Bytes per row in the framebuffer: {}", framebuffer.pitch());
             for i in 0..100_u64 {
-                let pixel_offset = i * framebuffer.pitch() + i * 4;
-
-                *(framebuffer.addr().add(pixel_offset as usize) as *mut u32) = 0xFFFFFFFF;
+                framebuffer.put_pixel(i, i);
             }
         }
-    }
+        None => com_println!("Couldn't get framebuffer"),
+    };
 
     halt()
 }
