@@ -2,9 +2,9 @@ use core::{arch::asm, fmt::Write};
 
 #[macro_export]
 macro_rules! com_print {
-    ($($args:tt)*) => {
-        write!(ComDebugger::new(), $($args)*)
-    };
+    ($($args:tt)*) => ({
+        write!(ComDebugger::new(), $($args)*);
+    });
 }
 #[macro_export]
 macro_rules! com_println {
