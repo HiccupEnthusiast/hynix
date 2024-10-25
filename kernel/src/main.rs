@@ -7,7 +7,7 @@ use limine::{
     request::{FramebufferRequest, RequestsEndMarker, RequestsStartMarker},
     BaseRevision,
 };
-use video::{Color, FramebufferHelper};
+use video::FramebufferHelper;
 
 #[used]
 #[link_section = ".requests"]
@@ -40,9 +40,7 @@ unsafe extern "C" fn _start() -> ! {
     match FramebufferHelper::new(&FRAMEBUFFER_REQUEST) {
         Some(framebuffer) => {
             com_println!("Bytes per row in the framebuffer: {}", framebuffer.pitch());
-            for i in 0..100_u64 {
-                framebuffer.put_pixel(i, i, Color([0xff, 0x00, 0xff]));
-            }
+            framebuffer.put_string(b"Hello from Hynix!");
         }
         None => com_println!("Couldn't get framebuffer"),
     };
