@@ -17,6 +17,7 @@ impl<'a> FramebufferHelper<'a> {
             as *mut u32) = 0x00 << 24 | color.raw();
     }
 }
+#[repr(transparent)]
 pub struct Color(pub [u8; 3]);
 impl Color {
     pub fn raw(&self) -> u32 {
