@@ -4,7 +4,7 @@ use core::{arch::asm, fmt::Write};
 macro_rules! com_print {
     ($($args:tt)*) => ({
         use ::core::fmt::Write;
-        write!($crate::serial::ComDebugger::new(), $($args)*);
+        let _ = write!($crate::serial::ComDebugger::new(), $($args)*);
     });
 }
 #[macro_export]
