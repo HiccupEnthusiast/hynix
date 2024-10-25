@@ -1,4 +1,5 @@
 **/target
+kernel/kernel
 iso_root
 limine
 x86_64-hynix.iso
