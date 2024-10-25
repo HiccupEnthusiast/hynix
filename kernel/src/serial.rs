@@ -3,19 +3,20 @@ use core::{arch::asm, fmt::Write};
 #[macro_export]
 macro_rules! com_print {
     ($($args:tt)*) => ({
-        write!(ComDebugger::new(), $($args)*);
+        use ::core::fmt::Write;
+        write!($crate::serial::ComDebugger::new(), $($args)*);
     });
 }
 #[macro_export]
 macro_rules! com_println {
     () => {
-        com_print!("\n")
+        $crate::com_print!("\n")
     };
     ($s:expr) => {
-        com_print!(concat!($s, "\n"))
+        $crate::com_print!(concat!($s, "\n"))
     };
     ($s:expr, $($args:tt)+) => {
-        com_print!(concat!($s, "\n"), $($args)*)
+        $crate::com_print!(concat!($s, "\n"), $($args)*)
     };
 }
 
