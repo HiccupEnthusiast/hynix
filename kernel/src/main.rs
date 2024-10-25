@@ -33,7 +33,7 @@ mod video;
 /// This function works properly as long as:
 /// a) It has #[no_mangle]
 /// b) It accepts no arguments
-/// c) The linker knows that kmain is the entry of the program
+/// c) The linker knows that _start is the entry of the program
 #[no_mangle]
 unsafe extern "C" fn _start() -> ! {
     assert!(BASE_REVISION.is_supported());
